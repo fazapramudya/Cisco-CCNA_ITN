@@ -1,0 +1,252 @@
+Packet Tracer – IPv6 Neighbor Discovery
+
+Addressing Table
+Device
+
+Interface
+
+IPv6 Address / Prefix
+
+Default Gateway
+
+RTA
+
+G0/0/0
+
+2001:db8:acad:1::1/64
+
+N/A
+
+RTA
+
+G0/0/1
+
+2001:db8:acad:1::1/64
+
+N/A
+
+PCA1
+
+NIC
+
+2001:db8:acad:1::A/64
+
+fe80::1
+
+PCA2
+
+NIC
+
+2001:db8:acad:1::B/64
+
+fe80::1
+
+PCB1
+
+NIC
+
+2001:db8:acad:2::A/64
+
+fe80::1
+
+Objectives
+Part 1: IPv6 Neighbor Discovery Local Network
+
+Part 2: IPv6 Neighbor Discovery Remote Network
+
+Background
+In order for a device to communicate with another device, the MAC address of the destination must be known. With IPv6, a process called Neighbor Discovery using NDP or ND protocol is responsible for determining the destination MAC address. You will gather PDU information in simulation mode to better understand the process. There is no Packet Tracer scoring for this activity.
+
+Instructions
+Part 1: IPv6 Neighbor Discovery Local Network
+In Part 1 of this activity, you will obtain the MAC address of a destination device on the same network.
+
+Step 1: Check the router for any neighbors that it discovered.
+a.     Click the RTA Router. Select the CLI tab and issue the command show ipv6 neighbors from the privileged exec mode. If there are any entries displayed, remove them using the command clear ipv6 neighbors.
+
+b.     Click PCA1, select the Desktop tab and click the Command Prompt icon.
+
+Step 2: Switch to Simulation Mode to capture events.
+c.     Click the Simulation button in the lower right corner of the Packet Tracer Topology window.
+
+d.     Click the Show All/None button in the lower left part of the Simulation Panel. Make certain Event List Filters – Visible Events displays None.
+
+e.     From the command prompt on PCA1, issue the command ping –n 1 2001:db8:acad:1::b. This will start the process of pinging PCA2.
+
+f.      Click the Play Capture Forward button, which is displayed as an arrow pointing to the right with a vertical bar within the Play Controls box. The status bar above the Play Controls should read Captured to 150. (The exact number may vary.)
+
+g.     Click the Edit Filters button. Select the IPv6 tab at the top and check the boxes for ICMPv6 and NDP. Click the red X in the upper right of the Edit ACL Filters window. The captured events should now be listed. You should have approximately 12 entries in the window.
+
+Question:
+Why are ND PDUs present?
+untuk mengirim ICMPv6 ping packet ke PCA2, PCA1 perlu mengetahui alamat MAC tujuan . IPv6 ND ini meminta informasi ini dijaringan
+
+h.     Click the square in the Type column for the first event, which should be ICMPv6.
+
+Question:
+Because the message starts with this event there is only an Outbound PDU. Under the OSI Model tab, what is the Message Type listed for ICMPv6?
+CMPv6 Echo Message Type: 128
+
+Notice there is no Layer 2 addressing. Click the Next Layer >> button to get an explanation about the ND (Neighbor Discovery) process.
+
+i.      Click the square next to the next event in the Simulation Panel. It should be at device PCA1 and the type should be NDP.
+
+Questions:
+What changed in the Layer 3 addressing?
+destination address sekarang IPv6 multicast address dari FF02::1:FF00:B
+
+What Layer 2 addresses are shown?
+The source address is PCA1 MAC – 0001.427E.E8ED and the destination MAC address is 3333.FF00.000B
+
+When a host does not know the MAC address of the destination, a special multicast MAC address is used by IPv6 Neighbor Discovery as the Layer 2 destination address.
+
+j.      Select the first NDP event at SwitchA.
+
+Question:
+Is there any difference between the In Layers and Out Layers for Layer 2?
+tidak 
+
+k.     Select the first NDP event at PCA2. Click the Outbound PDU Details.
+
+Question:
+What addresses are displayed for the following?
+
+Note: The addresses in the fields may be wrapped, adjust the size of the PDU window to make address information easier to read.
+
+Ethernet II DEST ADDR:
+0001.427E.E8ED
+
+Ethernet II SRC ADDR:
+0040.0B02:.243E
+
+IPv6 SRC IP:
+2001:db8:acad:1::b
+
+IPv6 DST IP:
+2001:db8:acad:1::a
+
+Question:
+l.      Select the first NDP event at RTA. Why are there no Out Layers?
+IPv6 address tidak sesuai dengan address router jadi packet tersebut dibuang
+
+m.   Click through the Next Layer >> button until the end and read steps 4 through 7 for further explanation.
+
+n.     Click the next ICMPv6 event at PCA1.
+
+Question:
+Does PCA1 now have all of the necessary information to communicate with PCA2?
+ya
+
+o.     Click the last ICMPv6 event at PCA1. Notice this is the last communication listed.
+
+Question:
+What is the ICMPv6 Echo Message Type?
+The ICMPv6 Echo Message Type is 129, an echo reply.
+
+p.     Click the Reset Simulation button in the Simulation Panel. From the command prompt of PCA1 repeat the ping to PCA2. (Hint: you should be able to press the up arrow to bring the previous command back.)
+
+q.     Click the Capture Forward button 5 times to complete the ping process.
+
+Question:
+Why weren’t there any NDP events?
+PCA 1 sudah tau  MAC address dari PCA2 jadi tidak membutuhkan menggunakan neighbor discovery
+
+Part 2: IPv6 Neighbor Discovery Remote Network
+In Part 2 of this activity, you will perform steps that are similar to those in Part 1, except in this case, the destination host is on another LAN. Observe how the Neighbor Discovery process differs from the process you observed in Part 1. Pay close attention to some of the additional addressing steps that take place when a device communicates with a device that is on a different network.
+
+Make sure to click the Reset Simulation button to clear out the previous events.
+
+Step 1: Capture events for remote communication.
+a.     Display and clear any entries in the IPv6 neighbor device table as was done in Part I.
+
+b.     Switch to simulation mode. Click the Show All/None button in the lower left part of the Simulation Panel. Make certain the Event List Filters – Visible Events displays None.
+
+c.     From the command prompt on PCA1 issue the command ping –n 1 2001:db8:acad:2::a to ping host PCB1.
+
+d.     Click the Play Capture Forward button which is displayed as an arrow pointing to the right with a vertical bar within the Play Controls box. The status bar above the Play Controls should read Captured to 150. (The exact number may vary.)
+
+e.     Click the Edit Filters button. Select the IPv6 tab at the top and check the boxes for ICMPv6 and NDP. Click the red X in the upper right of the Edit ACL Filters window. All of the previous events should now be listed. You should notice there are considerably more entries listed this time.
+
+f.      Click the square in the Type Column for the first event, which should be ICMPv6. Because the message starts with this event, there is only an Outbound PDU. Notice that it is missing the Layer 2 information as it did in the previous scenario.
+
+g.     Click the first NDP event At Device PCA1.
+
+Question:
+What address is being used for the Src IP in the inbound PDU?
+The Link Local address for PCA1 – fe80::201:42ff:fe7e:e8ed
+
+IPv6 Neighbor Discovery will determine the next destination to forward the ICMPv6 message.
+
+h.     Click the second ICMPv6 event for PCA1. PCA1 now has enough information to create an ICMPv6 echo request.
+
+Question:
+What MAC address is being used for the destination MAC?
+0001.961d.6301, the MAC address of G0/0/0 of RTA
+
+i.      Click the next ICMPv6 event at device RTA. Notice that the outbound PDU from RTA lacks the destination Layer 2 address, This means that RTA once again has to perform a Neighbor Discovery for the interface that has the 2001:db8:acad:2:: network because it doesn’t know the MAC addresses of the devices on the G0/0/1 LAN.
+
+j.      Skip down to the first ICMPv6 event for device PCB1.
+
+Question:
+What is missing in the outbound Layer 2 information?
+destination MAC address harus ditentukan untuk IPv6 destination address
+
+k.     The next few NDP events are associating the remaining IPv6 addresses to MAC addresses. The previous NDP events associated MAC addresses with Link Local addresses.
+
+l.      Skip to the last set of ICMPv6 events and notice that all of the addresses have been learned. The required information is now known, so PCB1 can send echo reply messages to PCA1.
+
+m.   Click the Reset Simulation button in the Simulation Panel. From the command prompt of PCA1 repeat the command to ping PCB1.
+
+n.     Click the Capture Forward button nine times to complete the ping process.
+
+Question:
+Were there any NDP events?
+tidak
+
+o.     Click the only PCB1 event in the new list.
+
+Questions:
+What does the destination MAC address correspond to?
+
+Why is PCB1 using the router interface MAC address to make its ICMP PDUs?
+karena device tujuan dalam jaringan lain, PCB1 mengalamatkan PDU ke default gateway interface MAC. RTA akan menentkan bagaimana untuk memberi alamt ke PDU layer 2 untuk mengirim menuju tujuan.
+
+Step 2: Examine router outputs.
+a.     Return to Realtime mode.
+
+b.     Click RTA and select the CLI tab. At the router prompt enter the command show ipv6 neighbors.
+
+Questions:
+How many addresses are listed?
+4
+
+What devices are these addresses associated with?
+PCA1 dan PCB1
+
+Are there any entries for PCA2 listed (why or why not)?
+PCA belum komunikasi antar jaringan 
+
+Ping PCA2 from the router.
+
+c.     Issue the show ipv6 neighbors command.
+
+Question:
+Are there entries for PCA2?
+ya
+
+Reflection Questions
+1.     When does a device require the IPv6 Neighbor Discovery process?
+ketika tujuan MAC address tidak diketahui.
+
+2.     How does a router help to minimize the amount of IPv6 Neighbor Discovery traffic on a network?
+router menyimpan neighbor tables jadi tidak perlu menginisiasi ND untuk setiap destination host
+
+How does IPv6 minimize the impact of the ND process on network hosts?
+IPv6 membuat alamat MAC tujuan multicast yang dibuat khusus yang mencakup sebagian dari alamat node
+
+3.     How does the Neighbor Discovery process differ when a destination host is on the same LAN and when it is on a remote LAN?
+ketika host tujuan berada di segmen LAN yang sama, hanya perangkat yang cocok dengan alamat IPv6 yang merespons dan perangkat lain menjatuhkan paket.
+ketika perangkat berada jauh, perangkat gateway memeberikan alamat MAC antarmuka pada antarmuka lokal untuk MAC tujuan dan kemudian mencari alamat MAC pada jaringan jarak jauh
+router kemudian akan menempatkan pasangan alamat IPv6/MAC yang merespons di table IPv6 Neighbor
+
+End of document

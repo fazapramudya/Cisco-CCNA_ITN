@@ -1,0 +1,234 @@
+Packet Tracer - Examine the ARP Table
+
+Addressing Table
+Device
+
+Interface
+
+MAC Address
+
+Switch Interface
+
+Router0
+
+Gg0/0
+
+0001.6458.2501
+
+G0/1
+
+Router0
+
+S0/0/0
+
+N/A
+
+N/A
+
+Router1
+
+G0/0
+
+00E0.F7B1.8901
+
+G0/1
+
+Router1
+
+S0/0/0
+
+N/A
+
+N/A
+
+10.10.10.2
+
+Wireless
+
+0060.2F84.4AB6
+
+F0/2
+
+10.10.10.3
+
+Wireless
+
+0060.4706.572B
+
+F0/2
+
+172.16.31.2
+
+F0
+
+000C.85CC.1DA7
+
+F0/1
+
+172.16.31.3
+
+F0
+
+0060.7036.2849
+
+F0/2
+
+172.16.31.4
+
+G0
+
+0002.1640.8D75
+
+F0/3
+
+Objectives
+Part 1: Examine an ARP Request
+
+Part 2: Examine a Switch MAC Address Table
+
+Part 3: Examine the ARP Process in Remote Communications
+
+Background
+This activity is optimized for viewing PDUs. The devices are already configured. You will gather PDU information in simulation mode and answer a series of questions about the data you collect.
+
+Instructions
+Part 1: Examine an ARP Request
+Step 1: Generate ARP requests by pinging 172.16.31.3 from 172.16.31.2.
+Open a command prompt
+
+a.     Click 172.16.31.2 and open the Command Prompt.
+
+b.     Enter the arp -d command to clear the ARP table.
+
+Close a command prompt
+
+c.     Enter Simulation mode and enter the command ping 172.16.31.3. Two PDUs will be generated. The ping command cannot complete the ICMP packet without knowing the MAC address of the destination. So the computer sends an ARP broadcast frame to find the MAC address of the destination.
+
+d.     Click Capture/Forward once. The ARP PDU moves Switch1 while the ICMP PDU disappears, waiting for the ARP reply. Open the PDU and record the destination MAC address.
+
+Question:
+Is this address listed in the table above?
+tidak
+
+Question:
+How many copies of the PDU did Switch1 make?
+3
+
+What is the IP address of the device that accepted the PDU?
+172.16.31.3
+
+e.     Open the PDU and examine Layer 2.
+
+Question:
+What happened to the source and destination MAC addresses?
+source menjadi destination
+
+f.      Click Capture/Forward until the PDU returns to 172.16.31.2.
+
+Question:
+How many copies of the PDU did the switch make during the ARP reply?
+1
+
+Step 2: Examine the ARP table.
+a.     Note that the ICMP packet reappears. Open the PDU and examine the MAC addresses.
+
+Question:
+Do the MAC addresses of the source and destination align with their IP addresses?
+ya
+
+b.     Switch back to Realtime and the ping completes.
+
+c.     Click 172.16.31.2 and enter the arp –a command.
+
+Question:
+To what IP address does the MAC address entry correspond?
+172.16.31.3
+
+In general, when does an end device issue an ARP request?
+ketika end device tidak tau MAC address milik receiver
+
+Part 2: Examine a Switch MAC Address Table
+Step 1: Generate additional traffic to populate the switch MAC address table.
+Open a command prompt
+
+a.     From 172.16.31.2, enter the ping 172.16.31.4 command.
+
+b.     Click 10.10.10.2 and open the Command Prompt.
+
+c.     Enter the ping 10.10.10.3 command.
+
+Question:
+How many replies were sent and received?
+4 sent dan 4 received
+
+Close a command prompt
+
+Step 2: Examine the MAC address table on the switches.
+a.     Click Switch1and then the CLI tab. Enter the show mac-address-table command.
+
+Question:
+Do the entries correspond to those in the table above?
+ya
+
+b.     Click Switch0, then the CLI tab. Enter the show mac-address-table command.
+
+Questions:
+Do the entries correspond to those in the table above?
+ya
+
+Why are two MAC addresses associated with one port?
+karena kedua device terkoneksi ke satu port melalui access point
+
+Part 3: Examine the ARP Process in Remote Communications
+Step 1: Generate traffic to produce ARP traffic.
+Open a command prompt
+
+a.     Click 172.16.31.2 and open the Command Prompt.
+
+b.     Enter the ping 10.10.10.1 command.
+
+c.     Type arp –a.
+
+Question:
+What is the IP address of the new ARP table entry?
+172.16.31.1
+
+d.     Enter arp -d to clear the ARP table and switch to Simulation mode.
+
+e.     Repeat the ping to 10.10.10.1.
+
+Question:
+How many PDUs appear?
+2
+
+Close a command prompt
+
+f.      Click Capture/Forward. Click the PDU that is now at Switch1.
+
+Question:
+What is the target destination IP destination address of the ARP request?
+172.16.31.1
+
+g.     The destination IP address is not 10.10.10.1.
+
+Question:
+Why?
+gateway address dari router interface disimpan dalam konfigurasi IPv4 dari host.jika host penerima tidak berada di jaringan yang sama,sumber menggunakan proses ARP untuk menentukan alamat MAC untuk router interfave yang berfungsi sebagai gateway.
+
+Step 2: Examine the ARP table on Router1.
+a.     Switch to Realtime mode. Click Router1 and then the CLI tab.
+
+b.     Enter privileged EXEC mode and then the show mac-address-table command.
+
+Question:
+How many MAC addresses are in the table? Why?
+0,
+
+c.     Enter the show arp command.
+
+Questions:
+Is there an entry for 172.16.31.2?
+ya
+
+What happens to the first ping in a situation where the router responds to the ARP request?
+times out
